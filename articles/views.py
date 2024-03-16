@@ -1,5 +1,7 @@
+from django.forms import BaseModelForm
+from django.http import HttpResponse
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import UpdateView, DeleteView
+from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
 
 
@@ -16,6 +18,20 @@ class ArticleDetailView(DetailView):
     model = Article
     template_name = "article_detail.html"
 
+class ArticleCreateView(CreateView):
+    """Article Create View"""
+
+    model = Article
+    template_name = "article_new.html"
+    fields=(
+        "title",
+        "body",
+    )
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
 class ArticleUpdateView(UpdateView):
     """Article Update View"""
 

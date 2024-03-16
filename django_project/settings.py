@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # Third Party
     'crispy_forms',
     'crispy_bootstrap5',
+    'django_dump_die',
     # Local First Party
     'accounts.apps.AccountsConfig',
     'pages.apps.PagesConfig',
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django_dump_die.middleware.DumpAndDieMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
