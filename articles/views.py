@@ -1,5 +1,4 @@
-from django.forms import BaseModelForm
-from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
@@ -7,18 +6,18 @@ from django.urls import reverse_lazy
 
 from .models import Article
 
-class ArticleListView(ListView):
+class ArticleListView(LoginRequiredMixin, ListView):
     """article list view"""
     model = Article
     template_name = "article_list.html"
 
-class ArticleDetailView(DetailView):
+class ArticleDetailView(LoginRequiredMixin, DetailView):
     """Article Detail View"""
 
     model = Article
     template_name = "article_detail.html"
 
-class ArticleCreateView(CreateView):
+class ArticleCreateView(LoginRequiredMixin, CreateView):
     """Article Create View"""
 
     model = Article
@@ -32,7 +31,7 @@ class ArticleCreateView(CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
     
-class ArticleUpdateView(UpdateView):
+class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Article Update View"""
 
     model = Article
@@ -42,9 +41,17 @@ class ArticleUpdateView(UpdateView):
     )
     template_name = "article_edit.html"
 
-class ArticleDeleteView(DeleteView):
+    def test_func(self):
+        obj = self.get.object()
+        return obj.author == self.request.user
+
+class ArticleDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Article Delete View"""
 
     model = Article 
     template_name = "article_delete.html"
     success_url = reverse_lazy("article_list")
+    
+    def test_func(self):
+        obj = self.get.object()
+        return obj.author == self.request.user
