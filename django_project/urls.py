@@ -23,5 +23,6 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("articles/", include("articles.urls")),
     path("pages/", include("pages.urls")),
+    path("api/", include("apis.urls")),
     path("", RedirectView.as_view(pattern_name="article_list"), name="home")
 ]
